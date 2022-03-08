@@ -48,6 +48,6 @@ class Session:
             self.csrf_token = None
             self.user = None
             self.auth = False
+
     def _get_user_json(self, username):
         return requests.get("https://api.scratch.mit.edu/users/" + username + "/").json(),
-

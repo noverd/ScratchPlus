@@ -39,7 +39,7 @@ class YourUserProfile:
                 "why_i_scratch": 4,
             }
         )[label]
-        project_id = project.id if isinstance(project, Project) else project
+        project_id = project
         data = {"featured_project": project_id, "featured_project_label": label}
         requests.put(
             "https://scratch.mit.edu/site-api/users/all/" + self.username + "/",
