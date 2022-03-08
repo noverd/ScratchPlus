@@ -44,7 +44,7 @@ class YourUserProfile:
         requests.put(
             "https://scratch.mit.edu/site-api/users/all/" + self.username + "/",
             data=json.dumps(data),
-            headers=selfг._headers,
+            headers=self.user._headers,
         )
 
 
