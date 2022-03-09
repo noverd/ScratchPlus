@@ -17,6 +17,15 @@ class CloudVariable:
         self.name = name
         self.value = value
 
+    def __eq__(self, other):
+        return self.value == other.value
+
+    def __ne__(self, other):
+        return self.value != other.value
+class CloudScCodeVariable(CloudVariable):
+    def __add__(self, other):
+        return CloudScCodeVariable(name=self.name,value=self.value.replace(self.value[0])+self.value.replace(self.value)[0])
+
 
 class CloudConnection(EventEmitter):
     def __init__(self, project_id: int, client):
