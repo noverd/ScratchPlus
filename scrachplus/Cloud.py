@@ -10,6 +10,14 @@ except ImportError:
 
 import threading
 from pymitter import EventEmitter
+import string
+
+normal_cloud_codec = list(string.ascii_uppercase + string.ascii_lowercase + string.digits + string.punctuation + ' ')
+
+
+class Encoder:
+    def __init__(self, codec: str = normal_cloud_codec):
+        pass
 
 
 class CloudVariable:
@@ -22,15 +30,31 @@ class CloudVariable:
 
     def __ne__(self, other):
         return self.value != other.value
-class CloudScCodeVariable(CloudVariable):
+
+
+class CloudScCodeVariable():
+    def __init__(self, name: str, value: str, Encoder):
+        self.name = name
+        self.value = value
+        self.Encoder = Encoder
+
+    def __eq__(self, other):
+        return self.value == other.value
+
+    def __ne__(self, other):
+        return self.value != other.value
+
     def __add__(self, other):
-        return CloudScCodeVariable(name=self.name,value=self.value.replace(self.value[0])+self.value.replace(self.value)[0])
+        return CloudScCodeVariable(name=self.name,
+                                   value=self.value.replace(self.value[0]) + self.value.replace(self.value)[0])
 
 
 class CloudConnection(EventEmitter):
-    def __init__(self, project_id: int, client):
+    def __init__(self, project_id: int, client, website="scratch.mit.edu", ScCode=CloudVariable):
         EventEmitter.__init__(self)
+        self.ScCode = ScCode
         self._client = client
+        self._website = website
         self.connect(project_id)
 
     def _send_packet(self, packet):
@@ -43,9 +67,9 @@ class CloudConnection(EventEmitter):
         self._cloudvariables = []
         self._timer = time.time()
         self._ws.connect(
-            "wss://clouddata.scratch.mit.edu",
+            f"wss://clouddata.{self._website}",
             cookie="scratchsessionsid=" + self._client.session_id + ";",
-            origin="https://scratch.mit.edu",
+            origin=self._website,
             enable_multithread=True,
         )  # connect the websocket
         self._send_packet(
@@ -64,7 +88,7 @@ class CloudConnection(EventEmitter):
                 pass
             else:
                 self._cloudvariables.append(
-                    CloudVariable(variable["name"], variable["value"])
+                    self.ScCode(variable["name"], variable["value"])
                 )
         self._start_cloud_var_loop()
 
