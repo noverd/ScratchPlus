@@ -16,7 +16,7 @@ normal_cloud_codec = list(string.ascii_uppercase + string.ascii_lowercase + stri
 
 
 class Encoder:
-    def __init__(self, codec: str = normal_cloud_codec):
+    def __init__(self, codec: list = normal_cloud_codec):
         self.codec = codec
 
 
@@ -33,7 +33,7 @@ class CloudVariable:
         return self.value != other.value
 
 
-class CloudScCodeVariable():
+class CloudScCodeVariable:
     def __init__(self, name: str, value: str, Encoder):
         self.name = name
         self.value = value
