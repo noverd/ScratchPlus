@@ -2,6 +2,7 @@ import requests
 import json
 from .UserProfiles import YourUserProfile, AnotherUserProfile
 from .Project import YourProject, AnotherProject
+from bs4 import BeautifulSoup
 
 
 class YourUser:
@@ -214,6 +215,12 @@ class YourUser:
         return requests.get(
             "https://api.scratch.mit.edu/users/" + self.username + "/messages/count/"
         ).json()["count"]
+
+    def get_comments(self, count: int = 10):
+        soup = BeautifulSoup(requests.get(f"https://scratch.mit.edu/site-api/comments/user/{self.username}/?count="
+                                          f"{count}").text, 'lxml')
+        for tag in soup.find_all(attrs={"class":"comment"}):
+            print(tag)
 
     def post_comment(self, content, parent_id="", commentee_id=""):
         data = {
