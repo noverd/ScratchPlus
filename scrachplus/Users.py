@@ -216,10 +216,10 @@ class YourUser:
             "https://api.scratch.mit.edu/users/" + self.username + "/messages/count/"
         ).json()["count"]
 
-    def get_comments(self, count: int = 10):
-        soup = BeautifulSoup(requests.get(f"https://scratch.mit.edu/site-api/comments/user/{self.username}/?count="
-                                          f"{count}").text, 'lxml')
-        for tag in soup.find_all(attrs={"class":"comment"}):
+    def get_comments(self, page: int = 10):
+        soup = BeautifulSoup(requests.get(f"https://scratch.mit.edu/site-api/comments/user/{self.username}/?page="
+                                          f"{page}").text, 'lxml')
+        for tag in soup.find_all("li",attrs={"class":"top-level-reply"}):
             print(tag)
 
     def post_comment(self, content, parent_id="", commentee_id=""):
