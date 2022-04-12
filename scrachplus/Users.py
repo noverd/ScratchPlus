@@ -219,7 +219,14 @@ class YourUser:
     def get_comments(self, page: int = 10):
         soup = BeautifulSoup(requests.get(f"https://scratch.mit.edu/site-api/comments/user/{self.username}/?page="
                                           f"{page}").text, 'lxml')
+        blocks = list()
+        block = list()
         for tag in soup.find_all("li",attrs={"class":"top-level-reply"}):
+            if tag == '<li class="top-level-reply">' or tag == '<li class="reply">' or tag == '<li class="reply last">':
+                blocks.append(block)
+                block = []
+            else:
+                block.append(tag)
             print(tag)
 
     def post_comment(self, content, parent_id="", commentee_id=""):
