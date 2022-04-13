@@ -17,4 +17,5 @@
 ## Используймые библеотеки:
 - [Requests](github.com/psf/requests) - Для удобной работы с протоколом HTTP.
 - [ScratchDB](https://scratchdb.lefty.one/) - Для работы с форумами на Scratch.
-
+## История обновлений
+08-03-2022 -> Добавлен WebSocket и несколько файлов
