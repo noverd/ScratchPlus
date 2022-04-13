@@ -1,6 +1,10 @@
 # ScratchPlus
 ## Что такое ScratchPlus?
-**Scratch** - это библеотека для работы со Scratch Api для Python :snake:.
+**ScratchPlus** - это библеотека для работы со Scratch Api для Python :snake:.
+### Какой функционал реализован?
+- :heavy_check_mark: Вход в скретч
+- [ ] Написать основные категории
+- [X] Опубликовать
 ## Используймые библеотеки:
 - [Requests](github.com/psf/requests) - Для удобной работы с протоколом HTTP.
 - [ScratchDB](https://scratchdb.lefty.one/) - Для работы с форумами на Scratch.
