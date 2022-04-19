@@ -1,9 +1,7 @@
 import requests
 import json
 
-from .IncompleteUser import IncompleteUser
-from .ScratchExceptions import UnauthorizedException
-from .ProjectComment import ProjectComment
+from .Comments import ProjectComment
 
 
 class AnotherProject:
@@ -16,7 +14,7 @@ class AnotherProject:
         self.public = data["public"]
         self.comments_allowed = data["comments_allowed"]
         self.is_published = data["is_published"]
-        self.author = IncompleteUser(data["author"])
+        self.author = (data["author"])
         self.thumbnail_URL = data["image"]
 
         self.created_timestamp = data["history"]["created"]
@@ -68,7 +66,7 @@ class AnotherProject:
             + str(comment_id)
             + "/"
         ).json()
-        return Comment(data)
+        return ProjectComment(self, data, self._client)
 
     def love(self):
         return requests.post(
@@ -209,12 +207,9 @@ class AnotherProject:
                 if len(res) != 40:
                     break
                 offset += 40
-            return list(map(self._to_project_comment, comments))
+            return [ProjectComment(self, i, self._client) for i in comments]
         else:
-            return list(
-                map(
-                    self._to_project_comment,
-                    requests.get(
+            comments = requests.get(
                         "https://api.scratch.mit.edu/users/"
                         + self.author.username
                         + "/projects/"
@@ -224,10 +219,8 @@ class AnotherProject:
                         + str(limit)
                         + "&offset="
                         + str(offset)
-                    ).json(),
-                )
-            )
-
+                    ).json()
+            return [ProjectComment(self, i, self._client) for i in comments]
     def report(self, category, reason, image=None):
         if not image:
             image = self.thumbnail_URL
@@ -259,7 +252,7 @@ class YourProject:
         self.public = data["public"]
         self.comments_allowed = data["comments_allowed"]
         self.is_published = data["is_published"]
-        self.author = IncompleteUser(data["author"])
+        self.author = data["author"]
         self.thumbnail_URL = data["image"]
 
         self.created_timestamp = data["history"]["created"]
@@ -311,7 +304,7 @@ class YourProject:
             + str(comment_id)
             + "/"
         ).json()
-        return Comment(data)
+        return ProjectComment(self, data, self._client)
 
     def love(self):
         return requests.post(
@@ -452,12 +445,9 @@ class YourProject:
                 if len(res) != 40:
                     break
                 offset += 40
-            return list(map(self._to_project_comment, comments))
+            return [ProjectComment(self, i, self._client) for i in comments]
         else:
-            return list(
-                map(
-                    self._to_project_comment,
-                    requests.get(
+            comments = requests.get(
                         "https://api.scratch.mit.edu/users/"
                         + self.author.username
                         + "/projects/"
@@ -467,9 +457,8 @@ class YourProject:
                         + str(limit)
                         + "&offset="
                         + str(offset)
-                    ).json(),
-                )
-            )
+                    ).json()
+            return [ProjectComment(self, i, self._client) for i in comments]
 
     def toggle_commenting(self):
         data = {"comments_allowed": not self.comments_allowed}

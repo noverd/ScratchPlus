@@ -12,11 +12,9 @@ import threading
 from pymitter import EventEmitter
 import string
 
-normal_cloud_codec = list(string.ascii_uppercase + string.ascii_lowercase + string.digits + string.punctuation + ' ')
-
 
 class Encoder:
-    def __init__(self, codec: list = normal_cloud_codec):
+    def __init__(self, codec: list = list(string.ascii_uppercase + string.ascii_lowercase + string.digits + string.punctuation + ' ')):
         self.codec = codec
 
 

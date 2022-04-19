@@ -3,7 +3,7 @@ import json
 from .UserProfiles import YourUserProfile, AnotherUserProfile
 from .Project import YourProject, AnotherProject
 from bs4 import BeautifulSoup
-
+import re
 
 class YourUser:
     def __init__(self, data, client):
@@ -216,18 +216,113 @@ class YourUser:
             "https://api.scratch.mit.edu/users/" + self.username + "/messages/count/"
         ).json()["count"]
 
-    def get_comments(self, page: int = 10):
-        soup = BeautifulSoup(requests.get(f"https://scratch.mit.edu/site-api/comments/user/{self.username}/?page="
-                                          f"{page}").text, 'lxml')
-        blocks = list()
-        block = list()
-        for tag in soup.find_all("li",attrs={"class":"top-level-reply"}):
-            if tag == '<li class="top-level-reply">' or tag == '<li class="reply">' or tag == '<li class="reply last">':
-                blocks.append(block)
-                block = []
+    def get_comments(self, page=1):
+        comments = []
+        soup = BeautifulSoup(requests.get(f"https://scratch.mit.edu/site-api/comments/user/{self.username}/?page={page}").content, "html.parser")
+        result = soup.find_all("li", class_="top-level-reply")
+        if len(result) == 0:
+            return {"error": "page doesn't exist"}
+
+        def get_replies(count):
+            '''
+            Retrieve replies to comment thread.
+            '''
+            # Extract reply list
+            replies = result[count].find("ul", class_="replies")
+            if replies.text == "":
+                # Detect empty reply chain
+                return None
             else:
-                block.append(tag)
-            print(tag)
+                # Get DOM node containing user data for comment
+                user = replies.find_all("div", class_="info")
+                # print(user)
+                # Initialize array with name "all_replies"
+                all_replies = []
+                # Iterate through reply list and extract username
+                for i in range(0, len(user)):
+                    # Get username section. Probably does it like this to save memory.
+                    username = user[i].find("div", class_="name")
+                    # Redefine username as the actual username element
+                    username = username.find("a").text
+                    # Get post content
+                    content = user[i].find("div", class_="content").text
+                    # Trim username newlines
+                    username = username.strip().replace("\n", "")
+                    # Trim post content newlines
+                    content = content.strip().replace("\n", "")
+                    # Get comment IDs
+                    search = re.search("data-comment-id=", str(result[i]))
+                    # Get post position in reply list
+                    index = search.span()[1]
+                    data = str(result[i])[index + 1:]
+                    i = 0
+                    id = ""
+                    while data[i] != '"':
+                        id += data[i]
+                        i += 1
+                    id = int(id)
+                    # Get post numbers (I think)
+                    search = re.search("title=", str(result[i]))
+                    index = search.span()[1]
+                    data = str(result[i])[index + 1:]
+                    i = 0
+                    comment_time = ""
+                    while data[i] != '"':
+                        comment_time += data[i]
+                        i += 1
+                        # Create final comment body
+                    reply = {"id": id, "username": username, "comment": content.replace("                   ", ""),
+                             "timestamp": comment_time}
+                    all_replies.append(reply)
+                # Respond with array containing comments
+                return all_replies
+
+        for i in range(0, len(result)):
+            user = result[i].find("div", class_="comment")
+            replies = get_replies(i)
+            user = user.find("div", class_="info")
+            user = user.find("div", class_="name")
+            user = user.find("a")
+            user = user.text
+
+            content = result[i].find("div", class_="comment")
+            content = content.find("div", class_="info")
+            content = content.find("div", class_="content")
+            content = content.text.strip()
+
+            search = re.search("data-comment-id=", str(result[i]))
+            index = search.span()[1]
+            data = str(result[i])[index + 1:]
+            i = 0
+            id = ""
+            while data[i] != '"':
+                id += data[i]
+                i += 1
+            id = int(id)
+
+            search = re.search("title=", str(result[i]))
+            index = search.span()[1]
+            data = str(result[i])[index + 1:]
+            i = 0
+            comment_time = ""
+            while data[i] != '"':
+                comment_time += data[i]
+                i += 1
+            if len(replies) == 0:
+                parent = True
+            else:
+                parent = False
+            comment = {
+                "Username": user,
+                "Content": content,
+                "Time": comment_time,
+                "IsReply": parent,
+                "Replies": replies,
+                "CommentID": id
+            }
+            comments.append(comment)
+        # Return a list of comments
+        return comments
 
     def post_comment(self, content, parent_id="", commentee_id=""):
         data = {
