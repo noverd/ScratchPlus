@@ -2,7 +2,7 @@ import requests
 import json
 
 
-class Comment:
+class UserComment:
     def __init__(self, json_data, _client, _headers):
         self.author = json_data["Username"]
         self._client = _client
@@ -11,7 +11,7 @@ class Comment:
         self.post_time = json_data["Time"]
         self.is_reply = json_data["IsReply"]
         self.id = json_data["CommentID"]
-        self.replies = [Comment(i, self._client, self._headers) for i in json_data["Replies"]]
+        self.replies = [UserComment(i, self._client, self._headers) for i in json_data["Replies"]]
 
     def get_user(self):
         return self._client.get_user(self.author)
