@@ -26,10 +26,10 @@ class Studio:
             "X-Token": self._client.token,
             "x-requested-with": "XMLHttpRequest",
             "Cookie": "scratchcsrftoken="
-            + self._client.csrf_token
-            + ";scratchlanguage=en;scratchsessionsid="
-            + self._client.session_id
-            + ";",
+                      + self._client.csrf_token
+                      + ";scratchlanguage=en;scratchsessionsid="
+                      + self._client.session_id
+                      + ";",
             "referer": "https://scratch.mit.edu/studios/" + str(self.id) + "/",
         }
 
@@ -96,7 +96,7 @@ class Studio:
     def toggle_commenting(self):
         headers = self._headers
         headers["referer"] = (
-            "https://scratch.mit.edu/studios/" + str(self.id) + "/comments/"
+                "https://scratch.mit.edu/studios/" + str(self.id) + "/comments/"
         )
         requests.post(
             "https://scratch.mit.edu/site-api/comments/gallery/"
@@ -108,7 +108,7 @@ class Studio:
     def post_comment(self, content, parent_id="", commentee_id=""):
         headers = self._headers
         headers["referer"] = (
-            "https://scratch.mit.edu/studios/" + str(self.id) + "/comments/"
+                "https://scratch.mit.edu/studios/" + str(self.id) + "/comments/"
         )
         data = {
             "commentee_id": commentee_id,
@@ -123,35 +123,35 @@ class Studio:
             data=json.dumps(data),
         )
 
-    def delete_comment(self, comment_id):
+    def delete_comment(self, comment_id, username):
         headers = self._headers
         headers["referer"] = (
-            "https://scratch.mit.edu/studios/" + str(self.id) + "/comments/"
+                "https://scratch.mit.edu/studios/" + str(self.id) + "/comments/"
         )
         data = {"id": comment_id}
         requests.post(
-            "https://scratch.mit.edu/site-api/comments/user/" + self.username + "/del/",
+            "https://scratch.mit.edu/site-api/comments/user/" + username + "/del/",
             headers=headers,
             data=json.dumps(data),
         )
 
-    def report_comment(self, comment_id):
+    def report_comment(self, comment_id, username):
         headers = self._headers
         headers["referer"] = (
-            "https://scratch.mit.edu/studios/" + str(self.id) + "/comments/"
+                "https://scratch.mit.edu/studios/" + str(self.id) + "/comments/"
         )
         data = {"id": comment_id}
         requests.post(
-            "https://scratch.mit.edu/site-api/comments/user/" + self.username + "/rep/",
+            "https://scratch.mit.edu/site-api/comments/user/" + username + "/rep/",
             headers=headers,
             data=json.dumps(data),
         )
 
     def invite_curator(self, user):
-        username = user.username if isinstance(user, User) == str else user
+        username = user.username if isinstance(user, YourUser) or isinstance(user, AnotherUser) else user
         headers = self._headers
         headers["referer"] = (
-            "https://scratch.mit.edu/studios/" + str(self.id) + "/curators/"
+                "https://scratch.mit.edu/studios/" + str(self.id) + "/curators/"
         )
         requests.put(
             "https://scratch.mit.edu/site-api/users/curators-in/"
@@ -164,7 +164,7 @@ class Studio:
     def accept_curator(self):
         headers = self._headers
         headers["referer"] = (
-            "https://scratch.mit.edu/studios/" + str(self.id) + "/curators/"
+                "https://scratch.mit.edu/studios/" + str(self.id) + "/curators/"
         )
         requests.put(
             "https://scratch.mit.edu/site-api/users/curators-in/"
@@ -178,7 +178,7 @@ class Studio:
         username = user.username if isinstance(user, YourUser) or isinstance(user, AnotherUser) else user
         headers = self._headers
         headers["referer"] = (
-            "https://scratch.mit.edu/studios/" + str(self.id) + "/curators/"
+                "https://scratch.mit.edu/studios/" + str(self.id) + "/curators/"
         )
         requests.put(
             "https://scratch.mit.edu/site-api/users/curators-in/"

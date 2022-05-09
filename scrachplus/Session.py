@@ -3,6 +3,8 @@ import requests
 import json
 from .Exceptions import ScratchLoginException
 from .Users import YourUser, AnotherUser
+from .Project import YourProject, AnotherProject
+from .Studios import Studio
 
 
 class Session:
@@ -55,3 +57,48 @@ class Session:
     def get_user(self, username):
         i = self._get_user_json(username)
         return YourUser(i, self) if self.username == i["username"] else AnotherUser(i, self)
+
+    def _get_project_json(self, id):
+        return requests.get(
+            "https://api.scratch.mit.edu/projects/" + str(id) + "/"
+        ).json()
+
+    def get_project(self, id):
+        i = self._get_project_json(id)
+        return YourProject(i, self) if self.username == i["username"] else AnotherProject(i, self)
+
+    def _get_studio_json(self, id):
+        return requests.get("https://api.scratch.mit.edu/studios/" + str(id) + "/").json()
+
+    def get_studio(self, id):
+        i = self._get_studio_json(id)
+        return Studio(i, self)
+
+    def _explore_projects_json(self, mode):
+        return requests.get(
+            "https://api.scratch.mit.edu/explore/projects/?mode="
+            + mode
+            + "&q=*"
+        ).json()
+
+    def explore_projects(self, mode="trending"):
+        i = self._explore_projects_json(mode)
+        return [
+            YourProject(project, self) if project["author"]["username"] == self.username else AnotherProject(project,
+                                                                                                             self)
+            for project in i]
+
+    def _search_projects_json(self, mode, query):
+        return requests.get(
+            "https://api.scratch.mit.edu/explore/projects/?mode="
+            + mode
+            + "&q="
+            + query
+        ).json()
+
+    def search_projects(self, mode="popular", query='*'):
+        i = self._search_projects_json(mode, query)
+        return [
+            YourProject(project, self) if project["author"]["username"] == self.username else AnotherProject(project,
+                                                                                                             self)
+            for project in i]
