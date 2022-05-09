@@ -2,11 +2,7 @@ import websocket
 import json
 import time
 
-try:
-    import numpy
-    import wsaccel
-except ImportError:
-    pass
+
 
 import threading
 from pymitter import EventEmitter

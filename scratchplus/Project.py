@@ -2,6 +2,7 @@ import requests
 import json
 
 from .Comments import ProjectComment
+from .Studios import Studio
 
 
 class AnotherProject:
@@ -160,7 +161,7 @@ class AnotherProject:
                 if len(res) != 40:
                     break
                 offset += 40
-            return list(map(self._client._to_studio, studios))
+            return []
         else:
             return list(
                 map(
