@@ -19,3 +19,7 @@
 - [Requests](github.com/psf/requests) - Библеотека Для удобной работы с протоколом HTTP.
 - [ScratchDB](https://scratchdb.lefty.one/) - API Для работы с форумами на Scratch.
 - [IsScratcher](https://github.com/hello-smile6/isScratcher) - API Для проверки статуса Скретчера
+
+## Установка
+Для установки можно возпользоваться командой
+`pip install scratchplus`
