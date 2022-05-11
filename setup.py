@@ -3,7 +3,7 @@ from pathlib import Path
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 setup(name='scratchplus',
-      version='0.911',
+      version='0.912',
       description='API wrapper for scratch',
       packages=['scratchplus'],
       author_email='thefinalspacestudio@gmail.com',
@@ -11,7 +11,7 @@ setup(name='scratchplus',
       zip_safe=False,
       url='https://github.com/noverd/ScratchPlus',
       install_requires=["requests",
-                        "websoket", "pymitter"],
+                        "websocket", "pymitter"],
       long_description=long_description,
       long_description_content_type='text/markdown'
       )
