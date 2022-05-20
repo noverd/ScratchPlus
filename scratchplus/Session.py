@@ -12,6 +12,7 @@ class Session:
         self.username = username
         self.password = password
         self._login()
+        self.studio = Studio
 
     def _login(self, language="en"):
         if self.username is not None and self.password is not None:
