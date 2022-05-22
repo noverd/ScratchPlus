@@ -1,6 +1,6 @@
 # ScratchPlus
 ## Что такое ScratchPlus?
-**ScratchPlus** - это библеотека для работы со Scratch Api для Python :snake:.
+**ScratchPlus** - это библиотека для работы со Scratch Api для Python :snake:.
 ## Что может наш модуль?
 - [✔️] Работать с данными скретча
 - [✔️] Писать и читать комментарии 
