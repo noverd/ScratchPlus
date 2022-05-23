@@ -2,7 +2,6 @@ import requests
 import json
 
 from .Comments import ProjectComment
-from .Studios import Studio
 
 
 class AnotherProject:
@@ -165,7 +164,7 @@ class AnotherProject:
         else:
             return list(
                 map(
-                    self._client._to_studio,
+                    self._client.studio,
                     requests.get(
                         "https://api.scratch.mit.edu/projects/"
                         + str(self.id)
@@ -399,11 +398,11 @@ class YourProject:
                 if len(res) != 40:
                     break
                 offset += 40
-            return list(map(self._client._to_studio, studios))
+            return list(map(self._client.studio, studios))
         else:
             return list(
                 map(
-                    self._client._to_studio,
+                    self._client.studio,
                     requests.get(
                         "https://api.scratch.mit.edu/projects/"
                         + str(self.id)

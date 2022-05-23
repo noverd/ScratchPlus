@@ -46,17 +46,18 @@ class Session:
             self.user = YourUser(self._get_user_json(self.username), self)
             self.auth = True
         else:
-            self.session_id = None
+            self.session_id = "NoLogged"
             self.token = None
-            self.csrf_token = None
+            self.csrf_token = "NoLogged"
             self.user = None
             self.auth = False
 
     def _get_user_json(self, username):
-        return requests.get("https://api.scratch.mit.edu/users/" + username + "/").json(),
+        return requests.get("https://api.scratch.mit.edu/users/" + username + "/").json()
 
     def get_user(self, username):
         i = self._get_user_json(username)
+        print(i)
         return YourUser(i, self) if self.username == i["username"] else AnotherUser(i, self)
 
     def _get_project_json(self, id):

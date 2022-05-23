@@ -88,11 +88,11 @@ class YourUser:
                 if len(res) != 40:
                     break
                 offset += 40
-            return list(map(self._client._to_studio, studios))
+            return list(map(self._client.studio, studios))
         else:
             return list(
                 map(
-                    self._client._to_studio,
+                    self._client.studio,
                     requests.get(
                         "https://api.scratch.mit.edu/users/"
                         + self.username
@@ -389,7 +389,11 @@ class AnotherUser:
         self.username = data["username"]
         self.joined_timestamp = data["history"]["joined"]
         self.scratchteam = data["scratchteam"]
-        self.scrather = requests.get(f"https://isscratcher.9pfs.repl.co/api/" + self.username).json()["isScratcher"]
+        self.deleted = False
+        try:
+            self.scrather = requests.get(f"https://isscratcher.9pfs.repl.co/api/" + self.username).json()["isScratcher"]
+        except:
+            self.deleted = True
         self.profile = AnotherUserProfile(data["profile"], self)
         self._client = client
         self._headers = {
@@ -464,11 +468,11 @@ class AnotherUser:
                 if len(res) != 40:
                     break
                 offset += 40
-            return list(map(self._client._to_studio, studios))
+            return list(map(self._client.studio, studios))
         else:
             return list(
                 map(
-                    self._client._to_studio,
+                    self._client.studio,
                     requests.get(
                         "https://api.scratch.mit.edu/users/"
                         + self.username
@@ -730,7 +734,6 @@ class AnotherUser:
             headers=self._headers,
             data=json.dumps(data),
         )
-
 
     def follow(self):
         return requests.put(
