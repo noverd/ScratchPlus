@@ -3,7 +3,7 @@ from pathlib import Path
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 setup(name='scratchplus',
-      version='0.912',
+      version='0.99',
       description='API wrapper for scratch',
       packages=['scratchplus'],
       author_email='thefinalspacestudio@gmail.com',
