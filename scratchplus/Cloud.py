@@ -45,12 +45,13 @@ class CloudScCodeVariable:
 
 
 class CloudConnection(EventEmitter):
-    def __init__(self, project_id: int, client, website="scratch.mit.edu", ScCode=CloudVariable):
+    def __init__(self, project_id: int, client, website="scratch.mit.edu", ScCode=CloudVariable, auth=True):
         EventEmitter.__init__(self)
         self.ScCode = ScCode
         self._client = client
         self._website = website
         self.connect(project_id)
+        self.auth = auth
 
     def _send_packet(self, packet):
         self._ws.send(json.dumps(packet) + "\n")
@@ -61,12 +62,19 @@ class CloudConnection(EventEmitter):
         self._ws = websocket.WebSocket()
         self._cloudvariables = []
         self._timer = time.time()
-        self._ws.connect(
+        if self.auth:
+            self._ws.connect(
             f"wss://clouddata.{self._website}",
             cookie="scratchsessionsid=" + self._client.session_id + ";",
             origin=self._website,
             enable_multithread=True,
-        )  # connect the websocket
+            )  # connect the websocket( Auth
+        else:
+            self._ws.connect(
+                f"wss://clouddata.{self._website}",
+                origin=self._website,
+                enable_multithread=True,
+            )  # connect the websocket
         self._send_packet(
             {
                 "method": "handshake",
