@@ -23,7 +23,8 @@
 ## Установка
 Для установки можно возпользоваться командой
 ```pip install scratchplus```
-
+## Начало
+``` import scratchplus #
 ## Документация
 ### Подключение к аккаунту
 Для работы с большей части API нужно авторизоваться (см. ниже)
@@ -39,3 +40,8 @@ account = Session("username_on_scratch", "password")
 account.get_user("username")
 ```
 Метод возращает объект класса YourUser или AnotherUser 
+#### get_project
+```
+account.get_project(22814354) # ID проекта как аргумент
+```
+Метод возращает объект класса YourProject или AnotherProject 
