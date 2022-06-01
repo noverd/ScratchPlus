@@ -45,3 +45,6 @@ account.get_user("username")
 account.get_project(22814354) # ID проекта как аргумент
 ```
 Метод возращает объект класса YourProject или AnotherProject 
+```
+## Спасибо
+- Пользователю github Quatum-Codes за парсер комментариев
