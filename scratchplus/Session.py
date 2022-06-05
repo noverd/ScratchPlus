@@ -5,6 +5,7 @@ from .Exceptions import ScratchLoginException
 from .Users import YourUser, AnotherUser
 from .Project import YourProject, AnotherProject
 from .Studios import Studio
+from .Comments import ScratchDataComment
 
 
 class Session:
@@ -104,3 +105,8 @@ class Session:
             YourProject(project, self) if project["author"]["username"] == self.username else AnotherProject(project,
                                                                                                              self)
             for project in i]
+    
+    def find_comments(*, query=""):
+        comments = requests.get(f"https://sd.sly-little-fox.ru/api/v1/search?q={query}").json()
+        return [ScratchDataComment(i, self) for comments in i]
+            
