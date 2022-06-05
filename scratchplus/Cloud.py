@@ -8,10 +8,34 @@ import threading
 from pymitter import EventEmitter
 import string
 
+class Encoder():
+    def __init__(self, codec="""AabBCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789 -_`~!@#$%^&*()+=[];:'"\|,.<>/?}{"""):
+        self.codec = codec 
 
-class Encoder:
-    def __init__(self, codec: list = list(string.ascii_uppercase + string.ascii_lowercase + string.digits + string.punctuation + ' ')):
-        self.codec = codec
+    def decode(self, value) -> str:
+        out = str()
+        value = str(value)
+        y = 0
+        for i in range(0, len(value)//2):
+            x = self.codec[int(str(value[y])+str(value[int(y)+1]))-1]
+            out = str(out)+str(x)
+            y += 2
+        return out
+
+    def encode(self, text) -> str:
+        out = ""
+        _len = int(len(text))
+        for i in range(0,_len):
+            try:
+                x = int(self.codec.index(text[i])+1)
+                if x < 10:
+                    x = str(0)+str(x)
+                out = out + str(x)
+            except ValueError:
+                raise ValueError('Symbol not supported')
+        return out    
+
+
 
 
 
@@ -39,19 +63,18 @@ class CloudScCodeVariable:
     def __ne__(self, other):
         return self.value != other.value
 
-    def __add__(self, other):
-        return CloudScCodeVariable(name=self.name,
-                                   value=self.value.replace(self.value[0]) + self.value.replace(self.value)[0])
+    def decode():
+        return self.Encoder.decode
 
 
 class CloudConnection(EventEmitter):
-    def __init__(self, project_id: int, client, website="scratch.mit.edu", ScCode=CloudVariable, auth=True):
+    def __init__(self, project_id: int, client, website="scratch.mit.edu", ScCode=CloudVariable, auth=True, Encoder=Encoder()):
         EventEmitter.__init__(self)
         self.ScCode = ScCode
         self._client = client
         self._website = website
-        self.connect(project_id)
         self.auth = auth
+        self.connect(project_id)
 
     def _send_packet(self, packet):
         self._ws.send(json.dumps(packet) + "\n")
@@ -160,7 +183,7 @@ class CloudConnection(EventEmitter):
                 for x in self._cloudvariables
                 if x.name == ("☁ " + name if not name.startswith("☁ ") else name)
             )
-            return var.value
+            return var
         except StopIteration:
             raise ValueError(
                 "Variable '"
