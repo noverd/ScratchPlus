@@ -71,3 +71,17 @@ class ProjectComment:
 
     def get_user(self):
         return self._client.get_user(self.author)
+    
+    
+class ScratchDataComment:
+    def __init__(self, data, client):
+        self.createdAt  = data["createdAt"]
+        self.content = data["content"]
+        self.author = data["author"]
+        self.profile = data["profile"]
+        self._client = client
+
+    def get_author(self):
+        return self._client.get_user(self.author)
+    def get_profile(self):
+        return self._client.get_user(self.profile)
