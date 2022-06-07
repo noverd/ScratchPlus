@@ -25,6 +25,13 @@
 Для установки можно возпользоваться командой
 ```pip install scratchplus```
 ## Начало
+Первым Quick Start у нас будет скрипт, для оставления комментариев на профиле пользователя
+```python
+from scratchplus import Session # импротируем сессию
+ses = Session("username_on_scratch", "password") # входим в аккаунт
+user = ses.get_user("gagarintentoper") # получаем пользователя
+user.post_comment("Привет Scratch+ разработчик!") # оставляем комментарий
+```
 ## Документация
 ### Подключение к аккаунту
 Для работы с большей части API нужно авторизоваться (см. ниже)
@@ -74,12 +81,17 @@ account.get_project(22814354) # ID проекта как аргумент
 ## Installation
 To install, you can use the command
 ```pip install scratchplus```
-## Start
-``` import scratchplus #
+## Quick Start
+```python
+from scratchplus import Session # import Session
+ses = Session("username_on_scratch", "password") # log in
+user = ses.get_user("gagarintentoper") # get user
+user.post_comment("Hello Scratch+ devloper!") # post the comment
+```
 ## Documentation
 ### Account connection
 To work with most of the API, you need to log in (see below)
-```
+```python
 from scratchplus import Session
 account = Session("username_on_scratch", "password")
 ```
@@ -87,15 +99,15 @@ account = Session("username_on_scratch", "password")
 After authorization, we can get an object from API for further work with it
 This will list all Get Zaros
 #### get_user
-```
+```python
 account.get_user("username")
 ```
 The method returns an object of class YourUser or AnotherUser
 #### get_project
-```
+```python
 account.get_project(22814354) # project ID as argument
 ```
 The method returns an object of class YourProject or AnotherProject
-```
+
 ## Thanks
 - To github user Quatum-Codes for the comment parser
