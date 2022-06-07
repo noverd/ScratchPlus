@@ -25,11 +25,10 @@
 Для установки можно возпользоваться командой
 ```pip install scratchplus```
 ## Начало
-``` import scratchplus #
 ## Документация
 ### Подключение к аккаунту
 Для работы с большей части API нужно авторизоваться (см. ниже)
-```
+```python
 from scratchplus import Session
 account = Session("username_on_scratch", "password")
 ```
@@ -37,16 +36,15 @@ account = Session("username_on_scratch", "password")
 После авторизации, мы можем получить объект из APi для далнейшей работы с ним
 Здесь будет приведёт список всех Get Заросов 
 #### get_user
-```
+```python
 account.get_user("username")
 ```
 Метод возращает объект класса YourUser или AnotherUser 
 #### get_project
-```
+```python
 account.get_project(22814354) # ID проекта как аргумент
 ```
 Метод возращает объект класса YourProject или AnotherProject 
-```
 ## Спасибо
 - Пользователю github Quatum-Codes за парсер комментариев
 
