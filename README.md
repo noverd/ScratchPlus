@@ -51,6 +51,21 @@ account.get_user("username")
 ```python
 account.get_project(22814354) # ID проекта как аргумент
 ```
+#### USER
+Здесь будет документация по классу User
+```python
+print(user.id) # Выведет user id
+print(user.username) # Выведет username
+print(user.joined_timestamp) # Выведет user дата присоединения к скретчу 
+print(user.scratchteam) # Выведет, относиться ли пользователь к ScratchTeam (True / False)
+print(user.get_projects(all=False, limit=20, offset=0)) # Выведет список проектов, созданных user. Флаг all нужен, если вы хотите получить все проекты. 
+print(user.get_curating(all=False, limit=20, offset=0)) # Выведет список студий, которые курирует user. Флаг all нужен, если вы хотите получить все студии. 
+print(user.get_favorites(all=False, limit=20, offset=0)) # Выведет список избранных проектов. Флаг all нужен, если вы хотите получить все избранные проекты. 
+print(user.get_followers(all=False, limit=20, offset=0)) # Выведет список подписчиков пользователя user. Флаг all нужен, если вы хотите получить всех подписчиков.
+print(user.get_following(all=False, limit=20, offset=0)) # Выведет список пользователей, на которых подписался user. Флаг all нужен, если вы хотите получить все подписки к пользователям. 
+print(user.get_message_count()) # Выведет количество сообщений в скретче у user
+print(user.get_comments(page=1)) # Выведет все комментарии со страницы на профиле user
+```
 Метод возращает объект класса YourProject или AnotherProject 
 ## Спасибо
 - Пользователю github Quatum-Codes за парсер комментариев
@@ -108,6 +123,22 @@ The method returns an object of class YourUser or AnotherUser
 account.get_project(22814354) # project ID as argument
 ```
 The method returns an object of class YourProject or AnotherProject
+
+#### USER
+There will be documentation on the User class
+```python
+print(user.id) # Print user id
+print(user.username) # Print username
+print(user.joined_timestamp) # Prints the date the user joined the scratch
+print(user.scratchteam) # Print if user belongs to ScratchTeam (True / False)
+print(user.get_projects(all=False, limit=20, offset=0)) # Lists projects created by user. The all flag is needed if you want to get all projects.
+print(user.get_curating(all=False, limit=20, offset=0)) # Lists the studios the user is curating. The all flag is needed if you want to get all the studios.
+print(user.get_favorites(all=False, limit=20, offset=0)) # List favorite projects. The all flag is needed if you want to get all featured projects.
+print(user.get_followers(all=False, limit=20, offset=0)) # Lists followers of user user. The all flag is needed if you want to get all subscribers.
+print(user.get_following(all=False, limit=20, offset=0)) # Print a list of users that user has followed. The all flag is needed if you want to get all user subscriptions.
+print(user.get_message_count()) # Prints the number of messages in the user's scratch
+print(user.get_comments(page=1)) # Print all comments from a page on the user's profile
+```
 
 ## Thanks
 - To github user Quatum-Codes for the comment parser
