@@ -103,4 +103,3 @@ class Session:
     def find_comments(self, query=""):
         comments = requests.get(f"https://sd.sly-little-fox.ru/api/v1/search?q={query}").json()
         return [ScratchDataComment(i, self) for i in comments]
-            
