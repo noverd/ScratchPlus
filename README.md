@@ -1,3 +1,4 @@
+# RUS
 # ScratchPlus
 ## Что такое ScratchPlus?
 **ScratchPlus** - это библиотека для работы со Scratch Api для Python :snake:.
@@ -48,3 +49,55 @@ account.get_project(22814354) # ID проекта как аргумент
 ```
 ## Спасибо
 - Пользователю github Quatum-Codes за парсер комментариев
+
+# ENG
+# Scratch Plus
+## What is ScratchPlus?
+**ScratchPlus** is a Scratch API library for Python :snake:.
+## What can our module do?
+- [✔️] Work with scratch data
+- [✔️] Write and read comments
+- [✔️] Work with cloud projects on Scratch
+- [❌] Register on Scratch
+- [✔️] Read forums and get post data
+- [✔️] Encode scratch numeric cloud data into normal strings
+- [❌] Post on forums
+## Advantages over analogue (ScratchClient)
+- [👍] Ability to automatically encode and decode cloud data
+- [👍] Read profile comments by parsing
+- [👍] If you don't want to login, there is a Read-Only mode.
+- [👍] You can log in to multiple accounts at once and perform actions from them asynchronously
+
+## Libraries or APIs used:
+- [Requests](github.com/psf/requests) - Library For convenient work with the HTTP protocol.
+- [ScratchDB](https://scratchdb.lefty.one/) - API For working with Scratch forums.
+- [IsScratcher](https://github.com/hello-smile6/isScratcher) - API To check Scratcher status
+
+## Installation
+To install, you can use the command
+```pip install scratchplus```
+## Start
+``` import scratchplus #
+## Documentation
+### Account connection
+To work with most of the API, you need to log in (see below)
+```
+from scratchplus import Session
+account = Session("username_on_scratch", "password")
+```
+### Get Methods
+After authorization, we can get an object from API for further work with it
+This will list all Get Zaros
+#### get_user
+```
+account.get_user("username")
+```
+The method returns an object of class YourUser or AnotherUser
+#### get_project
+```
+account.get_project(22814354) # project ID as argument
+```
+The method returns an object of class YourProject or AnotherProject
+```
+## Thanks
+- To github user Quatum-Codes for the comment parser
