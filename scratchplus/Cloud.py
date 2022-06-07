@@ -1,9 +1,6 @@
 import websocket
 import json
 import time
-
-
-
 import threading
 from pymitter import EventEmitter
 import string
@@ -36,21 +33,6 @@ class Encoder():
         return out    
 
 
-
-
-
-class CloudVariable:
-    def __init__(self, name: str, value: str):
-        self.name = name
-        self.value = value
-
-    def __eq__(self, other):
-        return self.value == other.value
-
-    def __ne__(self, other):
-        return self.value != other.value
-
-
 class CloudScCodeVariable:
     def __init__(self, name: str, value: str, Encoder):
         self.name = name
@@ -63,14 +45,18 @@ class CloudScCodeVariable:
     def __ne__(self, other):
         return self.value != other.value
 
-    def decode():
-        return self.Encoder.decode
+    def decode(data):
+        return self.Encoder.decode(data)
+    
+    def encode(data):
+        return self.Encoder.encode(data)
 
 
 class CloudConnection(EventEmitter):
-    def __init__(self, project_id: int, client, website="scratch.mit.edu", ScCode=CloudVariable, auth=True, Encoder=Encoder()):
+    def __init__(self, project_id: int, client, website="scratch.mit.edu", ScCode=CloudScCodeVariable, auth=True, Encoder=Encoder()):
         EventEmitter.__init__(self)
         self.ScCode = ScCode
+        self.encoder = Encoder
         self._client = client
         self._website = website
         self.auth = auth
@@ -114,7 +100,7 @@ class CloudConnection(EventEmitter):
                 pass
             else:
                 self._cloudvariables.append(
-                    self.ScCode(variable["name"], variable["value"])
+                    self.ScCode(variable["name"], variable["value"], self.encoder)
                 )
         self._start_cloud_var_loop()
 
