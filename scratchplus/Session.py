@@ -6,6 +6,7 @@ from .Users import YourUser, AnotherUser
 from .Project import YourProject, AnotherProject
 from .Studios import Studio
 from .Comments import ScratchDataComment
+from .Cloud import CloudConnection
 
 
 class Session:
@@ -14,6 +15,7 @@ class Session:
         self.password = password
         self._login()
         self.studio = Studio
+        self.CloudConnection = CloudConnection
 
     def _login(self, language="en"):
         if True:

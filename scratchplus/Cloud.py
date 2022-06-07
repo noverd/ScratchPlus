@@ -5,32 +5,34 @@ import threading
 from pymitter import EventEmitter
 import string
 
+
 class Encoder():
-    def __init__(self, codec="""AabBCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789 -_`~!@#$%^&*()+=[];:'"\|,.<>/?}{"""):
-        self.codec = codec 
+    def __init__(self,
+                 codec="""AabBCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789 -_`~!@#$%^&*()+=[];:'"\|,.<>/?}{"""):
+        self.codec = codec
 
     def decode(self, value) -> str:
         out = str()
         value = str(value)
         y = 0
-        for i in range(0, len(value)//2):
-            x = self.codec[int(str(value[y])+str(value[int(y)+1]))-1]
-            out = str(out)+str(x)
+        for i in range(0, len(value) // 2):
+            x = self.codec[int(str(value[y]) + str(value[int(y) + 1])) - 1]
+            out = str(out) + str(x)
             y += 2
         return out
 
     def encode(self, text) -> str:
         out = ""
         _len = int(len(text))
-        for i in range(0,_len):
+        for i in range(0, _len):
             try:
-                x = int(self.codec.index(text[i])+1)
+                x = int(self.codec.index(text[i]) + 1)
                 if x < 10:
-                    x = str(0)+str(x)
+                    x = str(0) + str(x)
                 out = out + str(x)
             except ValueError:
                 raise ValueError('Symbol not supported')
-        return out    
+        return out
 
 
 class CloudScCodeVariable:
@@ -45,15 +47,16 @@ class CloudScCodeVariable:
     def __ne__(self, other):
         return self.value != other.value
 
-    def decode(data):
-        return self.Encoder.decode(data)
-    
-    def encode(data):
-        return self.Encoder.encode(data)
+    def decode(self, data):
+        return self.Encoder.decode(self.value)
+
+    def encode(self):
+        return self.Encoder.encode(self.value)
 
 
 class CloudConnection(EventEmitter):
-    def __init__(self, project_id: int, client, website="scratch.mit.edu", ScCode=CloudScCodeVariable, auth=True, Encoder=Encoder()):
+    def __init__(self, project_id: int, client, website="scratch.mit.edu", ScCode=CloudScCodeVariable, auth=True,
+                 Encoder=Encoder()):
         EventEmitter.__init__(self)
         self.ScCode = ScCode
         self.encoder = Encoder
@@ -73,10 +76,10 @@ class CloudConnection(EventEmitter):
         self._timer = time.time()
         if self.auth:
             self._ws.connect(
-            f"wss://clouddata.{self._website}",
-            cookie="scratchsessionsid=" + self._client.session_id + ";",
-            origin=self._website,
-            enable_multithread=True,
+                f"wss://clouddata.{self._website}",
+                cookie="scratchsessionsid=" + self._client.session_id + ";",
+                origin=self._website,
+                enable_multithread=True,
             )  # connect the websocket( Auth
         else:
             self._ws.connect(

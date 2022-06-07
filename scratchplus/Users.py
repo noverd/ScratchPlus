@@ -13,7 +13,6 @@ class YourUser:
         self.username = data["username"]
         self.joined_timestamp = data["history"]["joined"]
         self.scratchteam = data["scratchteam"]
-        self.scrather = requests.get(f"https://isscratcher.9pfs.repl.co/api/" + self.username).json()["isScratcher"]
         self.profile = YourUserProfile(data["profile"], self)
         self._client = client
         self._headers = {
