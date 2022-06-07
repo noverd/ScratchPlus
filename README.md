@@ -51,6 +51,8 @@ account.get_user("username")
 ```python
 account.get_project(22814354) # ID проекта как аргумент
 ```
+Метод возращает объект класса YourProject или AnotherProject 
+
 #### USER
 Здесь будет документация по классу User
 ```python
@@ -66,7 +68,6 @@ print(user.get_following(all=False, limit=20, offset=0)) # Выведет спи
 print(user.get_message_count()) # Выведет количество сообщений в скретче у user
 print(user.get_comments(page=1)) # Выведет все комментарии со страницы на профиле user
 ```
-Метод возращает объект класса YourProject или AnotherProject 
 ## Спасибо
 - Пользователю github Quatum-Codes за парсер комментариев
 
