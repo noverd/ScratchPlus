@@ -9,14 +9,14 @@ from .Comments import ScratchDataComment
 
 
 class Session:
-    def __init__(self, username=None, password=None):
+    def __init__(self, username, password):
         self.username = username
         self.password = password
         self._login()
         self.studio = Studio
 
     def _login(self, language="en"):
-        if self.username is not None and self.password is not None:
+        if True:
             headers = {
                 "x-csrftoken": "a",
                 "x-requested-with": "XMLHttpRequest",
@@ -46,12 +46,6 @@ class Session:
             ).group(1)
             self.user = YourUser(self._get_user_json(self.username), self)
             self.auth = True
-        else:
-            self.session_id = "NoLogged"
-            self.token = None
-            self.csrf_token = "NoLogged"
-            self.user = None
-            self.auth = False
 
     def _get_user_json(self, username):
         return requests.get("https://api.scratch.mit.edu/users/" + username + "/").json()
