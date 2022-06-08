@@ -67,6 +67,11 @@ print(user.get_followers(all=False, limit=20, offset=0)) # Выведет спи
 print(user.get_following(all=False, limit=20, offset=0)) # Выведет список пользователей, на которых подписался user. Флаг all нужен, если вы хотите получить все подписки к пользователям. 
 print(user.get_message_count()) # Выведет количество сообщений в скретче у user
 print(user.get_comments(page=1)) # Выведет все комментарии со страницы на профиле user
+user.post_comment(content, parent_id="", commentee_id="") # Оставит комментарий на профиле user. В параметр parent_id id комментария, под которым вы хотите оставить новый. 
+user.toggle_commenting() # Включает/Выключает комментирование на профиле user, работает только на профиле аккаунта, в который вы вошли
+user.follow() # Подписываеться на user
+user.unfollow() # Отписываеться от гser
+user.report(field) # Посылает репорт на user. Field - поле выбора причины репорта (Username/Icon/About Me/What I'm Working On) 
 ```
 ## Спасибо
 - Пользователю github Quatum-Codes за парсер комментариев
@@ -139,6 +144,11 @@ print(user.get_followers(all=False, limit=20, offset=0)) # Lists followers of us
 print(user.get_following(all=False, limit=20, offset=0)) # Print a list of users that user has followed. The all flag is needed if you want to get all user subscriptions.
 print(user.get_message_count()) # Prints the number of messages in the user's scratch
 print(user.get_comments(page=1)) # Print all comments from a page on the user's profile
+user.post_comment(content, parent_id="", commentee_id="") # Post a comment on user's profile. In the parent_id parameter, the id of the comment under which you want to leave a new one.
+user.toggle_commenting() # Turns on/off commenting on the user profile, only works on the profile of the account you are logged into
+user.follow() # Follow user
+user.unfollow() # Unfollow ser
+user.report(field) # Sends a report to user. Field - field for selecting the reason for the report (Username/Icon/About Me/What I'm Working On)
 ```
 
 ## Thanks
