@@ -48,7 +48,25 @@ class Session:
             ).group(1)
             self.user = YourUser(self._get_user_json(self.username), self)
             self.auth = True
+            
+    def change_password(self, new_password: str) -> bool:
+        URL = 'https://scratch.mit.edu/accounts/password_change/'
+        headers = {
+        "x-requested-with": "XMLHttpRequest",
+        "Cookie": "scratchlanguage=en;permissions=%7B%7D;scratchsessionsid=" + self.session_id + ";" + "scratchcsrftoken=" + '"' + self.csrf_token + '"' + ";",
+        "referer": URL,
 
+                        }
+        login_data = {"old_password": self.password,
+                  "new_password1": new_password,
+                  "new_password2": new_password,
+                  "csrfmiddlewaretoken": self.csrf_token}
+        r = requests.post(URL, data=login_data, headers=headers)
+        if r.status_code == 200:
+            return True
+        else:
+            return False
+    
     def _get_user_json(self, username):
         return requests.get("https://api.scratch.mit.edu/users/" + username + "/").json()
 
