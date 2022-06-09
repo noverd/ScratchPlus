@@ -76,23 +76,20 @@ class YourUser:
             studios = []
             offset = 0
             while True:
-                res = requests.get(
+                res = list(requests.get(
                     "https://api.scratch.mit.edu/users/"
                     + self.username
                     + "/studios/curate"
                     + "?limit=40&offset="
                     + str(offset)
-                ).json()
+                ).json())
                 studios += res
                 if len(res) != 40:
                     break
                 offset += 40
-            return list(map(self._client.studio, studios))
+            return [self._client.studio(i, self._client) for i in res]
         else:
-            return list(
-                map(
-                    self._client.studio,
-                    requests.get(
+            res = list(requests.get(
                         "https://api.scratch.mit.edu/users/"
                         + self.username
                         + "/studios/curate/"
@@ -100,9 +97,9 @@ class YourUser:
                         + str(limit)
                         + "&offset="
                         + str(offset)
-                    ).json(),
-                )
-            )
+                    ).json()
+                       )
+            return [self._client.studio(i, self._client) for i in res]
 
     def get_favorites(self, all=False, limit=20, offset=0):
         if all:
@@ -456,33 +453,30 @@ class AnotherUser:
             studios = []
             offset = 0
             while True:
-                res = requests.get(
+                res = list(requests.get(
                     "https://api.scratch.mit.edu/users/"
                     + self.username
                     + "/studios/curate"
                     + "?limit=40&offset="
                     + str(offset)
-                ).json()
+                ).json())
                 studios += res
                 if len(res) != 40:
                     break
                 offset += 40
-            return list(map(self._client.studio, studios))
+            return [self._client.studio(i, self._client) for i in res]
         else:
-            return list(
-                map(
-                    self._client.studio,
-                    requests.get(
-                        "https://api.scratch.mit.edu/users/"
-                        + self.username
-                        + "/studios/curate/"
-                        + "?limit="
-                        + str(limit)
-                        + "&offset="
-                        + str(offset)
-                    ).json(),
-                )
-            )
+            res = list(requests.get(
+                "https://api.scratch.mit.edu/users/"
+                + self.username
+                + "/studios/curate/"
+                + "?limit="
+                + str(limit)
+                + "&offset="
+                + str(offset)
+            ).json()
+                       )
+            return [self._client.studio(i, self._client) for i in res]
 
     def get_favorites(self, all=False, limit=20, offset=0):
         if all:

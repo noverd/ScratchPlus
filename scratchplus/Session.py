@@ -16,7 +16,6 @@ class Session:
         self._login()
         self.studio = Studio
         self.CloudConnection = CloudConnection
-
     def _login(self, language="en"):
         if True:
             headers = {

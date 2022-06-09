@@ -9,7 +9,7 @@ class Studio:
     def __init__(self, data, client):
         self.id = data["id"]
         self.title = data["title"]
-        self.owner = data["owner"]
+        self.host = data["host"]
         self.description = data["description"]
         self.thumbnail_URL = data["image"]
         self.visible = data["visibility"] == "visibile"
@@ -18,7 +18,6 @@ class Studio:
         self.created_timestamp = data["history"]["created"]
         self.last_modified_timestamp = data["history"]["modified"]
 
-        self.follower_count = data["stats"]["followers"]
 
         self._client = client
         self._headers = {
