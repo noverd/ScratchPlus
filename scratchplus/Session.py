@@ -16,6 +16,7 @@ class Session:
         self._login()
         self.studio = Studio
         self.CloudConnection = CloudConnection
+
     def _login(self, language="en"):
         if True:
             headers = {
@@ -47,25 +48,33 @@ class Session:
             ).group(1)
             self.user = YourUser(self._get_user_json(self.username), self)
             self.auth = True
-            
-    def change_password(self, new_password: str) -> bool:
+
+    def change_password(self, new_password: str):
         URL = 'https://scratch.mit.edu/accounts/password_change/'
         headers = {
-        "x-requested-with": "XMLHttpRequest",
-        "Cookie": "scratchlanguage=en;permissions=%7B%7D;scratchsessionsid=" + self.session_id + ";" + "scratchcsrftoken=" + '"' + self.csrf_token + '"' + ";",
-        "referer": URL,
+            "x-requested-with": "XMLHttpRequest",
+            "Cookie": "scratchlanguage=en;permissions=%7B%7D;scratchsessionsid=" + self.session_id + ";" + "scratchcsrftoken=" + '"' + self.csrf_token + '"' + ";",
+            "referer": URL,
 
-                        }
+        }
         login_data = {"old_password": self.password,
-                  "new_password1": new_password,
-                  "new_password2": new_password,
-                  "csrfmiddlewaretoken": self.csrf_token}
+                      "new_password1": new_password,
+                      "new_password2": new_password,
+                      "csrfmiddlewaretoken": self.csrf_token}
         r = requests.post(URL, data=login_data, headers=headers)
-        if r.status_code == 200:
-            return True
-        else:
-            return False
-    
+
+    def change_country(self, country: str):
+        URL = 'https://scratch.mit.edu/accounts/settings/'
+        headers = {
+            "x-requested-with": "XMLHttpRequest",
+            "Cookie": "scratchlanguage=en;permissions=%7B%7D;scratchsessionsid=" + self.session_id + ";" + "scratchcsrftoken=" + '"' + self.csrf_token + '"' + ";",
+            "referer": URL,
+
+        }
+        login_data = {"country": country,
+                      "csrfmiddlewaretoken": self.csrf_token}
+        r = requests.post(URL, data=login_data, headers=headers)
+
     def _get_user_json(self, username):
         return requests.get("https://api.scratch.mit.edu/users/" + username + "/").json()
 
@@ -117,7 +126,7 @@ class Session:
             YourProject(project, self) if project["author"]["username"] == self.username else AnotherProject(project,
                                                                                                              self)
             for project in i]
-    
+
     def find_comments(self, query=""):
         comments = requests.get(f"https://sd.sly-little-fox.ru/api/v1/search?q={query}").json()
         return [ScratchDataComment(i, self) for i in comments]
