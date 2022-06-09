@@ -72,7 +72,6 @@ class Session:
 
     def get_user(self, username):
         i = self._get_user_json(username)
-        print(i)
         return YourUser(i, self) if self.username == i["username"] else AnotherUser(i, self)
 
     def _get_project_json(self, id):
