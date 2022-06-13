@@ -18,7 +18,6 @@ class Studio:
         self.created_timestamp = data["history"]["created"]
         self.last_modified_timestamp = data["history"]["modified"]
 
-
         self._client = client
         self._headers = {
             "x-csrftoken": self._client.csrf_token,
@@ -31,6 +30,39 @@ class Studio:
                       + ";",
             "referer": "https://scratch.mit.edu/studios/" + str(self.id) + "/",
         }
+
+    def set_to_public(self, q: bool):
+        URL = f'https://scratch.mit.edu/site-api/galleries/{self.id}/mark/' + "open/" if q else "closed/"
+        headers = {
+            "x-requested-with": "XMLHttpRequest",
+            "Cookie": "scratchlanguage=en;permissions=%7B%7D;scratchsessionsid=" + self._client.session_id + ";" + "scratchcsrftoken=" + '"' + self._client.csrf_token + '"' + ";",
+            "referer": URL,
+
+        }
+        r = requests.put(URL, headers=headers)
+
+    def get_managers(self, limit: int = 20, offset: int = 0, all=False):
+        if all:
+            URL = f"https://api.scratch.mit.edu/studios/{self.id}/managers/?limit=20&offset="
+            managers = []
+            while True:
+                res = requests.get(URL + str(offset)
+                                        ).json()
+                managers.append(res)
+                if len(res) != 40:
+                    break
+                offset += 40
+
+            return [
+                YourUser(i, self._client) if i["username"] == self._client.username else AnotherUser(i,
+                                                                                                     self._client)
+                for i in managers]
+        else:
+            URL = f"https://api.scratch.mit.edu/studios/{self.id}/managers/?limit={limit}&offset={offset}"
+            i = requests.get(URL).json()
+            return [
+                YourUser(i, self._client) if i["username"] == self._client.username else AnotherUser(i,
+                                                                                                     self._client)]
 
     def add_project(self, project):
         project_id = project.id if isinstance(project, YourProject) or isinstance(project, AnotherProject) else project
@@ -187,7 +219,7 @@ class Studio:
             headers=headers,
         )
 
-    def set_description(self, content):
+    def set_description(self, content: str):
         data = {"description": content}
         requests.put(
             "https://scratch.mit.edu/site-api/galleries/all/" + str(self.id) + "/",
@@ -196,7 +228,7 @@ class Studio:
         )
         self.description = content
 
-    def set_title(self, content):
+    def set_title(self, content: str):
         data = {"title": content}
         requests.put(
             "https://scratch.mit.edu/site-api/galleries/all/" + str(self.id) + "/",

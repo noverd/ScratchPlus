@@ -12,3 +12,7 @@ class ScratchNoAuthException(ScratchAuthException):
 
 class ScratchLoginException(ScratchAuthException):
     pass
+
+
+class ScratchForumException(ScratchException):
+    pass

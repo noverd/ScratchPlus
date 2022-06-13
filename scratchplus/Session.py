@@ -1,12 +1,13 @@
 import re
 import requests
 import json
-from .Exceptions import ScratchLoginException
+from .Exceptions import ScratchLoginException, ScratchForumException
 from .Users import YourUser, AnotherUser
 from .Project import YourProject, AnotherProject
 from .Studios import Studio
 from .Comments import ScratchDataComment
 from .Cloud import CloudConnection
+from .Forum import ForumPost, ForumTopic
 
 
 class Session:
@@ -57,11 +58,11 @@ class Session:
             "referer": URL,
 
         }
-        login_data = {"old_password": self.password,
-                      "new_password1": new_password,
-                      "new_password2": new_password,
-                      "csrfmiddlewaretoken": self.csrf_token}
-        r = requests.post(URL, data=login_data, headers=headers)
+        data = {"old_password": self.password,
+                "new_password1": new_password,
+                "new_password2": new_password,
+                "csrfmiddlewaretoken": self.csrf_token}
+        r = requests.post(URL, data=data, headers=headers)
 
     def change_country(self, country: str):
         URL = 'https://scratch.mit.edu/accounts/settings/'
@@ -71,9 +72,43 @@ class Session:
             "referer": URL,
 
         }
-        login_data = {"country": country,
-                      "csrfmiddlewaretoken": self.csrf_token}
-        r = requests.post(URL, data=login_data, headers=headers)
+        data = {"country": country,
+                "csrfmiddlewaretoken": self.csrf_token}
+        r = requests.post(URL, data=data, headers=headers)
+
+    def change_email(self, email: str):
+        URL = 'https://scratch.mit.edu/accounts/email_change/'
+        headers = {
+            "x-requested-with": "XMLHttpRequest",
+            "Cookie": "scratchlanguage=en;permissions=%7B%7D;scratchsessionsid=" + self.session_id + ";" + "scratchcsrftoken=" + '"' + self.csrf_token + '"' + ";",
+            "referer": URL,
+
+        }
+        data = {"email": email,
+                "password": self.password,
+                "csrfmiddlewaretoken": self.csrf_token}
+
+        r = requests.post(URL, data=data, headers=headers)
+
+    def get_forum_post(self, post_id: int):
+        r = requests.get(f"https://scratchdb.lefty.one/v3/forum/post/info/{post_id}")
+        js = r.json()
+        try:
+            js["error"]
+        except:
+            return ForumPost(js, self)
+        else:
+            raise ScratchForumException(js["error"])
+
+    def get_topic(self, topic_id: int):
+        r = requests.get(f"https://scratchdb.lefty.one/v3/forum/topic/history/{topic_id}")
+        js = r.json()
+        try:
+            js["error"]
+        except:
+            return ForumTopic(js)
+        else:
+            raise ScratchForumException(js["error"])
 
     def _get_user_json(self, username):
         return requests.get("https://api.scratch.mit.edu/users/" + username + "/").json()
