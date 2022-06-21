@@ -27,6 +27,10 @@ class YourUser:
             "referer": "https://scratch.mit.edu/users/" + self.username + "/",
         }
 
+    def get_activity_html(self, limit=10):
+        r = requests.get(f"https://scratch.mit.edu/messages/ajax/user-activity/?user={self.username}&max={limit}")
+        return r.text
+
     def get_projects(self, all=False, limit=20, offset=0):
         if all:
             projects = []
@@ -90,14 +94,14 @@ class YourUser:
             return [self._client.studio(i, self._client) for i in res]
         else:
             res = list(requests.get(
-                        "https://api.scratch.mit.edu/users/"
-                        + self.username
-                        + "/studios/curate/"
-                        + "?limit="
-                        + str(limit)
-                        + "&offset="
-                        + str(offset)
-                    ).json()
+                "https://api.scratch.mit.edu/users/"
+                + self.username
+                + "/studios/curate/"
+                + "?limit="
+                + str(limit)
+                + "&offset="
+                + str(offset)
+            ).json()
                        )
             return [self._client.studio(i, self._client) for i in res]
 
@@ -521,6 +525,10 @@ class AnotherUser:
                 YourProject(i, self._client) if i["author"]["username"] == self._client.username else AnotherProject(i,
                                                                                                                      self._client)
                 for i in projects]
+
+    def get_activity_html(self, limit=10):
+        r = requests.get(f"https://scratch.mit.edu/messages/ajax/user-activity/?user={self.username}&max={limit}")
+        return r.text
 
     def get_followers(self, all=False, limit=20, offset=0):
         if all:
