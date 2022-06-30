@@ -100,13 +100,32 @@ class Session:
         else:
             raise ScratchForumException(js["error"])
 
+    def get_posts_list(self, topic_id: int, page: int = 0, order: str = "newest"):
+        """
+        :param topic_id: Topic id
+        :param page: Each page has 50 posts, default is page 0
+        :param order: Order to sort posts by, defaults to "newest", possible options include "oldest"
+        :return: Return list of ForumPost from this forum
+        """
+        url = f"https://scratchdb.lefty.one/v3/forum/topic/posts/{topic_id}/{page}?o={order}"
+        jsn = requests.get(url).json()
+        try:
+            jsn["error"]
+        except:
+            return [ForumPost(i, self) for i in jsn]
+        else:
+            raise ScratchForumException(jsn["error"])
+
     def get_topic(self, topic_id: int):
-        r = requests.get(f"https://scratchdb.lefty.one/v3/forum/topic/history/{topic_id}")
+        r = requests.get(f"https://scratchdb.lefty.one/v3/forum/topic/info/{topic_id}")
+        if "[]" == r.text:
+            raise ScratchForumException("Unknown error, or topic not found")
         js = r.json()
+
         try:
             js["error"]
         except:
-            return ForumTopic(js)
+            return ForumTopic(js, self)
         else:
             raise ScratchForumException(js["error"])
 

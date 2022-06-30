@@ -1,6 +1,6 @@
 import requests
 import json
-
+import bs4
 from .Users import AnotherUser, YourUser
 from .Project import YourProject, AnotherProject
 
@@ -41,28 +41,64 @@ class Studio:
         }
         r = requests.put(URL, headers=headers)
 
-    def get_managers(self, limit: int = 20, offset: int = 0, all=False):
+    def get_comments(self, page: int = 1):
+        url = f"https://scratch.mit.edu/site-api/comments/gallery/{self.id}/?page={page}"
+        sp = bs4.BeautifulSoup(requests.get(url).content, "html.parser")
+        comments = sp.find_all("li", {"class": "top-level-reply"})
+        ret = []
+        if len(comments) < 1:
+            return []
+        for i in comments:
+            replies = []
+            replies_list = i.find_all("li", {"class": "reply"})
+            if len(replies_list) > 0:
+                IsReply = True
+            else:
+                IsReply = False
+            for x in replies_list:
+                reply = {
+                    'CommentID': x.find("div", {"class": "comment"})['data-comment-id'],
+                    'Username': x.find("a", {"id": "comment-user"})['data-comment-user'],
+                    'Content': str(x.find("div", {"class": "content"}).text).strip(),
+                    'Time': x.find("span", {"class": "time"})['title'],
+                    "IsReply": True,
+                    'replies': []
+                }
+                replies.append(reply)
+
+            comment = {
+                'CommentID': i.find("div", {"class": "comment"})['data-comment-id'],
+                'Username': i.find("a", {"id": "comment-user"})['data-comment-user'],
+                'Content': str(i.find("div", {"class": "content"}).text).strip(),
+                'Time': i.find("span", {"class": "time"})['title'],
+                'IsReply': IsReply,
+                'replies': replies
+            }
+            ret.append(comment)
+        return ret
+
+    def get_managers(self, limit: int = 20, offset: int = 0, all = False):
         if all:
-            URL = f"https://api.scratch.mit.edu/studios/{self.id}/managers/?limit=20&offset="
+            URL = f"https://api.scratch.mit.edu/studios/{self.id}/managers/?limit={limit}&offset="
             managers = []
             while True:
                 res = requests.get(URL + str(offset)
-                                        ).json()
-                managers.append(res)
+                                   ).json()
+                for i in res:
+                    managers.append(i)
                 if len(res) != 40:
                     break
                 offset += 40
-
             return [
                 YourUser(i, self._client) if i["username"] == self._client.username else AnotherUser(i,
                                                                                                      self._client)
                 for i in managers]
         else:
             URL = f"https://api.scratch.mit.edu/studios/{self.id}/managers/?limit={limit}&offset={offset}"
-            i = requests.get(URL).json()
+            managers = requests.get(URL).json()
             return [
                 YourUser(i, self._client) if i["username"] == self._client.username else AnotherUser(i,
-                                                                                                     self._client)]
+                                                                                                     self._client) for i in managers]
 
     def add_project(self, project):
         project_id = project.id if isinstance(project, YourProject) or isinstance(project, AnotherProject) else project

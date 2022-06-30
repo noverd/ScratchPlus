@@ -1,5 +1,7 @@
+
+
 class ForumTopic:
-    def __init__(self, data):
+    def __init__(self, data, client):
         self.id = data["id"]
         self.title = data["title"]
         self.category = data["category"]
@@ -8,6 +10,15 @@ class ForumTopic:
         self.first_checked = data["time"]["first_checked"]
         self.last_checked = data["time"]["last_checked"]
         self.post_count = data["post_count"]
+        self._client = client
+
+    def get_posts_list(self, page: int = 0, order: str = "newest"):
+        """
+        :param page: Each page has 50 posts, default is page 0
+        :param order: Order to sort posts by, defaults to "newest", possible options include "oldest"
+        :return: Return list of ForumPost from this forum
+        """
+        return self._client.get_posts_list(self.id, page, order)
 
 
 class ForumPost:
