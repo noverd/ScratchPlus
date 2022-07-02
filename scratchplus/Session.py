@@ -50,6 +50,21 @@ class Session:
             self.user = YourUser(self._get_user_json(self.username), self)
             self.auth = True
 
+    def get_topics_from_category(self, category: str, removed_topics=False, page: int = 1):
+        r = requests.get(
+            f"https://scratchdb.lefty.one/v3/forum/category/topics/{category}/{page}?detail=1&filter={str(int(removed_topics))}")
+        jsn = r.json()
+        out = list()
+        try:
+            jsn["error"]
+        except:
+            pass
+        else:
+            raise ScratchForumException(jsn["error"]+": "+jsn["message"])
+        for i in jsn:
+            out.append(ForumTopic(i, self))
+        return out
+
     def change_password(self, new_password: str):
         URL = 'https://scratch.mit.edu/accounts/password_change/'
         headers = {
@@ -116,7 +131,7 @@ class Session:
         else:
             raise ScratchForumException(jsn["error"])
 
-    def get_topic(self, topic_id: int):
+    def get_topic(self, topic_id: str):
         r = requests.get(f"https://scratchdb.lefty.one/v3/forum/topic/info/{topic_id}")
         if "[]" == r.text:
             raise ScratchForumException("Unknown error, or topic not found")
