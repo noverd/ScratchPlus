@@ -13,8 +13,6 @@
 ## Advantages over analogue (ScratchClient)
 - [👍] Ability to automatically encode and decode cloud data
 - [👍] Read profile comments by parsing
-- [👍] If you don't want to login, there is a Read-Only mode.
-- [👍] You can log in to multiple accounts at once and perform actions from them asynchronously
 
 ## Libraries or APIs used:
 - [Requests](github.com/psf/requests) - Library For convenient work with the HTTP protocol.
@@ -91,8 +89,6 @@ user.report(field) # Sends a report to user. Field - field for selecting the rea
 ## Преимущества перед аналогом (ScratchClient)
 - [👍] Возможность автоматический кодировать и декодировать облачные данные  
 - [👍] Чтение комментариев профиля путём парсинга
-- [👍] Если вы не хотите входить в аккаунт, есть Read-Only режим.
-- [👍] Вы можете войти в несколько аккаунтов сразу и выполнять от них действия в асинхронном режиме
 
 ## Используймые библеотеки  или API:
 - [Requests](github.com/psf/requests) - Библеотека Для удобной работы с протоколом HTTP.
