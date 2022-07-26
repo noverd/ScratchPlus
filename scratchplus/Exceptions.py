@@ -16,3 +16,7 @@ class ScratchLoginException(ScratchAuthException):
 
 class ScratchForumException(ScratchException):
     pass
+
+
+class UserNotFound(ScratchException):
+    pass

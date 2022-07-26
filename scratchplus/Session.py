@@ -1,7 +1,7 @@
 import re
 import requests
 import json
-from .Exceptions import ScratchLoginException, ScratchForumException
+from .Exceptions import ScratchLoginException, ScratchForumException, UserNotExits
 from .Users import YourUser, AnotherUser
 from .Project import YourProject, AnotherProject
 from .Studios import Studio
@@ -149,7 +149,10 @@ class Session:
 
     def get_user(self, username):
         i = self._get_user_json(username)
-        return YourUser(i, self) if self.username == i["username"] else AnotherUser(i, self)
+        try:
+            return YourUser(i, self) if self.username == i["username"] else AnotherUser(i, self)
+        except:
+            raise UserNotExits(f"User {username} is not found")
 
     def _get_project_json(self, id):
         return requests.get(

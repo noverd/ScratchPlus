@@ -6,7 +6,7 @@ from pymitter import EventEmitter
 import string
 
 
-class Encoder():
+class Encoder:
     def __init__(self,
                  codec="""AabBCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789 -_`~!@#$%^&*()+=[];:'"\|,.<>/?}{"""):
         self.codec = codec
