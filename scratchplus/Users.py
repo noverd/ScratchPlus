@@ -149,7 +149,7 @@ class YourUser:
                                                                                                                      self._client)
                 for i in projects]
 
-    def get_followers(self, all=False, limit=20, offset=0):
+    def get_followers(self, all=False, limit=20, offset=0, get_nick=False):
         if all:
             users = []
             offset = 0
@@ -165,6 +165,8 @@ class YourUser:
                 if len(res) != 40:
                     break
                 offset += 40
+            if get_nicks:
+                return [i["username"] for i in users]
             return [
                 YourUser(i, self._client) if i["username"] == self._client.username else AnotherUser(i,
                                                                                                      self._client)
@@ -181,6 +183,8 @@ class YourUser:
                     + str(offset)
                 ).json(),
             )
+            if get_nicks:
+                return [i["username"] for i in users]
             return [
                 YourUser(i, self._client) if i["username"] == self._client.username else AnotherUser(i,
                                                                                                      self._client)
@@ -530,7 +534,7 @@ class AnotherUser:
         r = requests.get(f"https://scratch.mit.edu/messages/ajax/user-activity/?user={self.username}&max={limit}")
         return r.text
 
-    def get_followers(self, all=False, limit=20, offset=0):
+    def get_followers(self, all=False, limit=20, offset=0, get_nicks=False):
         if all:
             users = []
             offset = 0
@@ -546,6 +550,8 @@ class AnotherUser:
                 if len(res) != 40:
                     break
                 offset += 40
+            if get_nicks:
+                return [i["username"] for i in users]
             return [
                 YourUser(i, self._client) if i["username"] == self._client.username else AnotherUser(i,
                                                                                                      self._client)
@@ -562,6 +568,8 @@ class AnotherUser:
                     + str(offset)
                 ).json(),
             )
+            if get_nicks:
+                return [i["username"] for i in users]
             return [
                 YourUser(i, self._client) if i["username"] == self._client.username else AnotherUser(i,
                                                                                                      self._client)
