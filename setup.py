@@ -3,11 +3,11 @@ from pathlib import Path
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text(encoding="utf-8")
 setup(name='scratchplus',
-      version='1.2.0',
+      version='1.6.0',
       description='API wrapper for scratch',
       packages=['scratchplus'],
       author_email='thefinalspacestudio@gmail.com',
-      author="gagarinten",
+      author="Gagarinten(Noverdo)",
       zip_safe=False,
       url='https://github.com/noverd/ScratchPlus',
       install_requires=["requests",
