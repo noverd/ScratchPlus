@@ -47,7 +47,6 @@ class Session:
             self.csrf_token = re.search(
                 "scratchcsrftoken=(.*?);", request.headers["Set-Cookie"]
             ).group(1)
-            self.user = YourUser(self._get_user_json(self.username), self)
             self.auth = True
     @property
     def user(self):
