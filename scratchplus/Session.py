@@ -49,7 +49,10 @@ class Session:
             ).group(1)
             self.user = YourUser(self._get_user_json(self.username), self)
             self.auth = True
-
+    @property
+    def user(self):
+        self.user = YourUser(self._get_user_json(self.username), self)
+        return YourUser(self._get_user_json(self.username), self)
     def get_topics_from_category(self, category: str, removed_topics=False, page: int = 1):
         r = requests.get(
             f"https://scratchdb.lefty.one/v3/forum/category/topics/{category}/{page}?detail=1&filter={str(int(removed_topics))}")
