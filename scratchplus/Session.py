@@ -1,7 +1,7 @@
 import re
 import requests
 import json
-from .Exceptions import ScratchLoginException, ScratchForumException, UserNotExits
+from .Exceptions import ScratchLoginException, ScratchForumException, UserNotFound
 from .Users import YourUser, AnotherUser
 from .Project import YourProject, AnotherProject
 from .Studios import Studio
