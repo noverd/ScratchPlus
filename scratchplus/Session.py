@@ -116,7 +116,27 @@ class Session:
             return ForumPost(js, self)
         else:
             raise ScratchForumException(js["error"])
+    def new_project(self, project_json):
+        response = requests.post(
+            "https://projects.scratch.mit.edu/",
+            headers={
+                **self._headers,
+                "accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            data=json.dumps(project_json),
+        ).json()
 
+        return int(response["content-name"])
+    def new_studio(self):
+        r = requests.post(
+            "https://scratch.mit.edu/studios/create/",
+            headers={
+                **self._headers,
+                "referer": "https://scratch.mit.edu/mystuff/",
+            },
+            data=None,
+        )
     def get_posts_list(self, topic_id: int, page: int = 0, order: str = "newest"):
         """
         :param topic_id: Topic id
