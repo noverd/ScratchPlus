@@ -137,6 +137,18 @@ class Session:
             },
             data=None,
         )
+    def change_avatar(self, filename):
+        f = open(filename, "rb")
+        r = requests.post(f"https://scratch.mit.edu/site-api/users/all/{self.username}/", headers=self._headers, files={"avatar.png":f}).json()
+        f.close()
+        try:
+            err = r["errors"]
+        except:
+            for i in err:
+                raise Exception(i)
+        else:
+            return r
+        
     def get_posts_list(self, topic_id: int, page: int = 0, order: str = "newest"):
         """
         :param topic_id: Topic id
