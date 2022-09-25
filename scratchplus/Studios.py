@@ -213,6 +213,16 @@ class Studio:
             headers=headers,
             data=json.dumps(data),
         )
+    def remove_curator(self, username):
+        headers = self._headers
+        headers["referer"] = (
+                f"https://scratch.mit.edu/studios/{str(self.id)}/curators/"
+        )
+        r = requests.post(
+            f"https://scratch.mit.edu/site-api/users/curators-in/{str(self.id)}/remove/?={username}",
+            headers=headers),
+        )
+        return r
 
     def invite_curator(self, user):
         username = user.username if isinstance(user, YourUser) or isinstance(user, AnotherUser) else user
