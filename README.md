@@ -1,4 +1,5 @@
 # ENG
+[![PyPI download month](https://img.shields.io/pypi/dm/scratchplus.svg)](https://pypi.python.org/pypi/scratchplus/)
 # Scratch Plus
 ## What is ScratchPlus?
 **ScratchPlus** is a Scratch API library for Python :snake:.
