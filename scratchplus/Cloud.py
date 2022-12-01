@@ -15,7 +15,7 @@ class Encoder:
         out = str()
         value = str(value)
         y = 0
-        for i in range(0, len(value) // 2):
+        for _ in range(len(value) // 2):
             x = self.codec[int(str(value[y]) + str(value[int(y) + 1])) - 1]
             out = str(out) + str(x)
             y += 2
@@ -23,8 +23,8 @@ class Encoder:
 
     def encode(self, text) -> str:
         out = ""
-        _len = int(len(text))
-        for i in range(0, _len):
+        _len = len(text)
+        for i in range(_len):
             try:
                 x = int(self.codec.index(text[i]) + 1)
                 if x < 10:
@@ -77,10 +77,11 @@ class CloudConnection(EventEmitter):
         if self.auth:
             self._ws.connect(
                 f"wss://clouddata.{self._website}",
-                cookie="scratchsessionsid=" + self._client.session_id + ";",
+                cookie=f"scratchsessionsid={self._client.session_id};",
                 origin=self._website,
                 enable_multithread=True,
-            )  # connect the websocket( Auth
+            )
+
         else:
             self._ws.connect(
                 f"wss://clouddata.{self._website}",
@@ -116,21 +117,22 @@ class CloudConnection(EventEmitter):
             try:
                 packet = {
                     "method": "set",
-                    "name": (
-                        "☁ " + variable if not variable.startswith("☁ ") else variable
-                    ),
+                    "name": variable
+                    if variable.startswith("☁ ")
+                    else f"☁ {variable}",
                     "value": str(value),
                     "user": self._client.username,
                     "project_id": str(self.project_id),
                 }
+
                 self._send_packet(packet)
                 self.emit("outgoing", packet)
                 self._timer = time.time()
                 for cloud in self._cloudvariables:
                     if (
-                            cloud.name == "☁ " + variable
-                            if not variable.startswith("☁ ")
-                            else variable
+                        variable
+                        if variable.startswith("☁ ")
+                        else cloud.name == f"☁ {variable}"
                     ):
                         cloud.value = value
                         self.emit("set", cloud)
@@ -167,15 +169,19 @@ class CloudConnection(EventEmitter):
 
     def get_cloud_variable(self, name):
         try:
-            var = next(
+            return next(
                 x
                 for x in self._cloudvariables
-                if x.name == ("☁ " + name if not name.startswith("☁ ") else name)
+                if x.name == (name if name.startswith("☁ ") else f"☁ {name}")
             )
-            return var
+
         except StopIteration:
             raise ValueError(
-                "Variable '"
-                + ("☁ " + name if not name.startswith("☁ ") else name)
-                + "' is not in this project"
+                (
+                    (
+                        "Variable '"
+                        + (name if name.startswith("☁ ") else f"☁ {name}")
+                    )
+                    + "' is not in this project"
+                )
             )

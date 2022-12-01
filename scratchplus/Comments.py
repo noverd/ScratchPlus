@@ -23,7 +23,7 @@ class UserComment:
             "parent_id": self.id,
         }
         requests.post(
-            "https://scratch.mit.edu/site-api/comments/user/" + self.author + "/add/",
+            f"https://scratch.mit.edu/site-api/comments/user/{self.author}/add/",
             headers=self._headers,
             data=json.dumps(data),
         )
